@@ -1,0 +1,141 @@
+"ATIVIDADE 01"
+
+//
+//
+
+import javax.swing.JOptionPane;
+
+public class Main {
+    public static void main(String[] args) {
+        String input = JOptionPane.showInputDialog("Digite o número de elementos:");
+        int n = Integer.parseInt(input);
+        int[] array = new int[n];
+        for (int i = 0; i < n; i++) {
+            input = JOptionPane.showInputDialog("Digite o número " + (i+1) + ":");
+            array[i] = Integer.parseInt(input);
+        }
+        bubbleSort(array);
+        input = JOptionPane.showInputDialog("Digite o número da pesquisa:");
+        int num = Integer.parseInt(input);
+        int pos = linearSearch(array, num);
+        if (pos == -1) {
+            JOptionPane.showMessageDialog(null, "Número não encontrado.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Número encontrado na posição: " + pos);
+        }
+    }
+
+    public static void bubbleSort(int[] array) {
+        int n = array.length;
+        for (int i = 0; i < n-1; i++) {
+            for (int j = 0; j < n-i-1; j++) {
+                if (array[j] > array[j+1]) {
+                    int temp = array[j];
+                    array[j] = array[j+1];
+                    array[j+1] = temp;
+                }
+            }
+        }
+    }
+
+    public static int linearSearch(int[] array, int num) {
+        int n = array.length;
+        for(int i = 0; i < n; i++) {
+            if(array[i] == num) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+
+
+
+
+"ATIVIDADE 02"
+
+//
+//
+
+import javax.swing.JOptionPane;
+import java.util.ArrayList;
+import java.util.Comparator;
+
+class Cliente {
+    int codigo;
+    String nome;
+    String dataNascimento;
+    String cpf;
+
+    Cliente(int codigo, String nome, String dataNascimento, String cpf) {
+        this.codigo = codigo;
+        this.nome = nome;
+        this.dataNascimento = dataNascimento;
+        this.cpf = cpf;
+    }
+
+    @Override
+    public String toString() {
+        return "Código: " + codigo + "\nNome: " + nome + "\nData de Nascimento: " + dataNascimento + "\nCPF: " + cpf;
+    }
+}
+
+class CadastroClientes {
+    ArrayList<Cliente> clientes;
+
+    CadastroClientes() {
+        this.clientes = new ArrayList<>();
+    }
+
+    void adicionarCliente(Cliente cliente) {
+        if (this.clientes.size() < 5) {
+            this.clientes.add(cliente);
+            this.clientes.sort(Comparator.comparingInt(c -> c.codigo));
+        } else {
+            JOptionPane.showMessageDialog(null, "Limite de clientes atingido.");
+        }
+    }
+
+    Cliente buscarCliente(int codigo) {
+        for (Cliente cliente : this.clientes) {
+            if (cliente.codigo == codigo) {
+                return cliente;
+            }
+        }
+        return null;
+    }
+
+    void exibirClientes() {
+        StringBuilder sb = new StringBuilder();
+        for (Cliente cliente : this.clientes) {
+            sb.append(cliente.toString()).append("\n\n");
+        }
+        JOptionPane.showMessageDialog(null, sb.toString());
+    }
+}
+
+public class Main2 {
+    public static void main(String[] args) {
+        CadastroClientes cadastro = new CadastroClientes();
+        while (cadastro.clientes.size() < 5) {
+            String input = JOptionPane.showInputDialog("Código do cliente (ou 'sair' para encerrar):");
+            if (input.equalsIgnoreCase("sair")) {
+                break;
+            }
+            int codigo = Integer.parseInt(input);
+            String nome = JOptionPane.showInputDialog("Nome do cliente:");
+            String dataNascimento = JOptionPane.showInputDialog("Data de nascimento do cliente:");
+            String cpf = JOptionPane.showInputDialog("CPF do cliente:");
+            cadastro.adicionarCliente(new Cliente(codigo, nome, dataNascimento, cpf));
+        }
+        String input = JOptionPane.showInputDialog("Código do cliente para pesquisa:");
+        int codigo = Integer.parseInt(input);
+        Cliente cliente = cadastro.buscarCliente(codigo);
+        if (cliente == null) {
+            JOptionPane.showMessageDialog(null, "Cliente não encontrado.");
+        } else {
+            JOptionPane.showMessageDialog(null, "Cliente encontrado:\n" + cliente.toString());
+        }
+        cadastro.exibirClientes();
+    }
+}
